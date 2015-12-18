@@ -1,12 +1,12 @@
 // project object
 
 // conditionally create project object
-if (typeof(road_condition_map_usDEC2015) == "undefined") var road_condition_map_usDEC2015 = {};
+if (typeof(childcare_college_costs_DEC2015) == "undefined") var childcare_college_costs_DEC2015 = {};
 
 // this object is all you should have to modify
-road_condition_map_usDEC2015 = {
-    div_id: "road_condition_us_map_2015",
-    toggle_div_id: "road_condition_us_map_2015_toggle_container",
+childcare_college_costs_DEC2015 = {
+    div_id: "childcare_college_costs_map_2015",
+    toggle_div_id: "childcare_college_costs_map_2015_toggle_container",
     data: childcare_college_costs_data,
     default_excludes: ["state"],
     // use small multiples instead of default tabs
@@ -22,46 +22,100 @@ road_condition_map_usDEC2015 = {
         ],
     default_category: "Percent difference",
     // dotted lines
-    dash_array: "3, 3",
+    //dash_array: "3, 3",
     color_range: {
-        min: [230,230,235],
-        max: [0,0,0]
+        min: [255, 204, 230],
+        max: [102, 0, 52]
     },
     // yellow borders
     geographyConfig: {
-        borderColor: "rgb(240,240,0)",
-        borderWidth: 2
+        borderColor: "rgb(229, 245, 255)",
+        borderWidth: .9
     }
 };
 
 /** Shouldn't need to modify from here down **/
 
 
-/*
+
 // optionally define custom html content for the popup window
-road_condition_map_usDEC2015.popup_html = function (geography, data, obj) {
+childcare_college_costs_DEC2015.popup_html = function (geography, data, obj) {
     var key = obj["color_field"];
     var title = geography.properties.name;
-    var heading =  "<h5 .dmmapmaker_popup_heading>" + title.replace('_', ' ') + "</h5>" ;
+    var data_string = data[key];
+    if (key == 'Percent difference') {
+        data_string += "%"
+    }
+    else if (data_string === false) {
+        data_string = "No data";
+    }
+    else {
+        data_string = "$" + Trendy.comma(data_string);
+    }
+
+    var heading =  "<h5 class='dmmapmaker_popup_heading'>" + title.replace('_', ' ') + "</h5>" ;
     var content = 
         "<div>"
         + "<strong><span class='dmmapmaker_popup_main_value'>"
-        + data[key].toString() + "% "
+        + data_string
         + "</span></strong>"
         + "<div>"
         + " " + key 
         + "</div>"
         + "</div>";
         
+    // rejigger the left and right position so the box is never smaller than 450px;
+    // TODO - add these hacks to the TrendDataMapper popup code
+    var width = $("#" + this.div_id).width();
+
+    var actual_width = $("#" + this.div_id + " " + ".datamaps-hoverover").width();
+
+    clearInterval(this.popup_interval);
+
+        var that = this;
+        //$("#" + that.div_id + " " + ".datamaps-hoverover").hide();
+        this.popup_interval = setInterval(function () {
+
+            $("#" + that.div_id + " " + ".datamaps-hoverover").width(200);
+            if ( $("#" + that.div_id + " " + ".datamaps-hoverover").width() 
+                + Number($("#" + that.div_id + " " + ".datamaps-hoverover").css("left").replace("px","")) 
+                >  $("#" + that.div_id).width()) {
+
+                $("#" + that.div_id + " " + ".datamaps-hoverover").width(200);
+                  
+   
+                $("#" + that.div_id + " " + ".datamaps-hoverover").css("left", 
+                    Number( $("#" + that.div_id + " " + ".datamaps-hoverover").css("left").replace("px","")) - 45
+                );
+                //$("#" + that.div_id + " " + ".datamaps-hoverover").css("right", "10");
+
+            } 
+
+            //$("#" + that.div_id + " " + ".datamaps-hoverover").show();
+        } , 100);
+
+        //$("#" + this.div_id + " " + ".datamaps-hoverover").css("right", 10);
+
+    
+
+    $("#" + that.div_id + " " + ".datamaps-hoverover").on("touchend", function () {
+        $(this).hide();
+    });
+
+    var left = $("#" + this.div_id + " " + ".datamaps-hoverover").css("left");
+    var right = $("#" + this.div_id + " " + ".datamaps-hoverover").css("right");
+    console.log(left, right, " : ", actual_width, width);
+
     return heading + content;
+
+
 
 };
 
-*/
 
 
 // initiation function to be called on page load
-road_condition_map_usDEC2015.init = function(obj) {
+childcare_college_costs_DEC2015.init = function(obj) {
    
     obj.map = new DmMapMaker( obj);
     
@@ -69,15 +123,17 @@ road_condition_map_usDEC2015.init = function(obj) {
 
 // when the page loads, go for it;
 jQuery(function () {
+
+
     // define $ as jQuery if we need to
     if (typeof(window.$) == "undefined" ) $=jQuery;
 
-    road_condition_map_usDEC2015.init(road_condition_map_usDEC2015);
+    childcare_college_costs_DEC2015.init(childcare_college_costs_DEC2015);
     
     // handle responsiveness from here, for now. DataMaps can be responsive, too
     $(window).resize(function () {
-        $("#" + road_condition_map_usDEC2015.div_id).html();
-            road_condition_map_usDEC2015.init(road_condition_map_usDEC2015);
+        $("#" + childcare_college_costs_DEC2015.div_id).html();
+            childcare_college_costs_DEC2015.init(childcare_college_costs_DEC2015);
     });
 });
 

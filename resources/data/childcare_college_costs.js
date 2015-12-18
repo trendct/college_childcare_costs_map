@@ -179,7 +179,7 @@ childcare_college_costs_data = {
     "Percent difference": 37.3,
     "Infant": 14366,
     "4-year-old": 11119,
-    "School-age": "FALSE",
+    "School-age": false,
     "College costs": 10527,
     "difference": 0.373
   },
@@ -267,7 +267,7 @@ childcare_college_costs_data = {
     "Percent difference": 8,
     "Infant": 8217,
     "4-year-old": 7511,
-    "School-age": "FALSE",
+    "School-age": false,
     "College costs": 7513,
     "difference": 0.08
   },
